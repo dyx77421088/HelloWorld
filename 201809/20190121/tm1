@@ -1,0 +1,53 @@
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();//n个物品
+		int p = sc.nextInt();//最大载重量
+		List<Wp> list = new ArrayList<Wp>();
+		for(int i = 0;i < n;++i) {
+			int a = sc.nextInt();//这物品的质量(个数)
+			double v = sc.nextDouble();//这个物品的价值
+			list.add(new Wp(a,v / a));
+		}
+		Collections.sort(list, new Comparator<Wp>() {//按价值v的降序排序
+			public int compare(Wp o1, Wp o2) {
+				return o1.v - o2.v > 0 ? -1 : 1;
+			}
+		});
+		double sum = 0.0;
+		Wp t;
+		for(int i = 0;i < list.size();++i) {//遍历每个物品
+			t = list.get(i);//当前这个物品
+			if(p >= t.n) {//完全能装下
+				sum += t.n * t.v;
+				p -= t.n;
+			} else {
+				sum += p * t.v;//只能装这么多了
+				break;
+			}
+		}
+		System.out.println(sum);
+		sc.close();
+	}
+	
+	static class Wp {
+		int n;//物品的个数
+		double v;//每个物品的价值
+		public Wp(int n, double v) {
+			this.n = n;
+			this.v = v;
+		}
+		public String toString() {
+			return "Wp [n=" + n + ", v=" + v + "]\n";
+		}
+	}
+
+}
