@@ -1,0 +1,29 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();//n的容量
+		int m = sc.nextInt();//m个物品
+		int []f = new int[m];//存放物品
+		
+		for(int i = 0;i < m;++i) {
+			f[i] = sc.nextInt();
+		}
+		Arrays.sort(f);
+		int s = 0;//记录最大能拿走的宝物个数
+		for(int i = 0;i < m;++i) {
+			if(n >= f[i]) {
+				n -= f[i];
+				s++;
+			} else {
+				break;
+			}
+		}
+		System.out.println(s);
+		sc.close();
+	}
+
+}
