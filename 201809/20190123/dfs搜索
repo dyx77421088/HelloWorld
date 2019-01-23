@@ -1,0 +1,67 @@
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Scanner;
+
+public class Main {
+	static LinkedList<Spot>[] map;
+	static int[] f;//到各个城市的最短路径
+	static boolean[] b;//这个地方已经走过了
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();//n个风景区
+		int m = sc.nextInt();//m条线路
+		map = new LinkedList[n + 1];
+		f = new int[n + 1];
+		b = new boolean[n + 1];
+		for(int i = 1;i <= n;++i) {//初始化
+			map[i] = new LinkedList<Spot>();
+		}
+		for(int i = 0;i < m;++i) {
+			map[sc.nextInt()].add(new Spot(sc.nextInt(), sc.nextInt()));//从这个景区到那个景区要走那么多的路
+		}
+		dfs(sc.nextInt());//广搜
+		for(int i = 1;i <= n;++i) {
+			System.out.print(f[i] + " ");
+		}
+		System.out.println();
+		sc.close();
+	}
+
+	static void dfs(int start) {
+		f[start] = 0;//自己所在的景区的距离为0
+		b[start] = true;
+		LinkedList<Spot> list = new LinkedList<Spot>();
+		list.addAll(map[start]);
+		Spot t;
+		while(list.size() > 0) {
+			//==========这个很重要=======================
+			Collections.sort(list, new Comparator<Spot>() {//排序,景区距离最短的优先处理
+				public int compare(Spot o1, Spot o2) {
+					return o1.d - o2.d;
+				}
+			});
+			//==========================================
+			t = list.removeFirst();
+			if(!b[t.target]) {//如果这个最近的这个景区没有被访问过,就访问
+				b[t.target] = true;
+				f[t.target] = t.d;
+			} else {//如果访问过那么就不会比之前的路径短，直接continue
+				continue;
+			}
+			for (Spot spot : map[t.target]) {
+				list.add(new Spot(spot.target,spot.d + t.d));//添加一个新的线路
+			}
+		}
+	}
+	
+	static class Spot {
+		int target;//目标景区
+		int d;
+		public Spot(int target, int d) {
+			this.target = target;
+			this.d = d;
+		}
+	}
+}
